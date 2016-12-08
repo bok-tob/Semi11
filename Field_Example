@@ -1,0 +1,52 @@
+package vectorfield;
+
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+
+public class Field {
+	public static void main(String args[]) {
+		int Ex = 10;
+		int Ey = 10;
+		int Ez = 10;
+		int Bx = 10;
+		int By = 10;
+		int Bz = 10;
+        JFrame t = new JFrame();
+        t.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        t.setExtendedState(Frame.MAXIMIZED_BOTH);
+        t.setVisible(true);
+        t.add(new JPanel() {
+
+            void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+                Graphics2D g = (Graphics2D) g1.create();
+
+                double dx = x2 - x1, dy = y2 - y1;
+                double angle = Math.atan2(dy, dx);
+                int len = (int) Math.sqrt(dx*dx + dy*dy);
+                AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+                at.concatenate(AffineTransform.getRotateInstance(angle));
+                g.transform(at);
+
+                g.drawLine(0, 0, len, 0);
+                g.fillPolygon(new int[] {len, len-4, len-4, len},
+                              new int[] {0, -4, 4, 0}, 4);
+            }
+            public void paintComponent(Graphics g) {
+            	for (int y = 50; y < t.getHeight() - 100; y += 20){
+            		for (int x = 50; x < t.getWidth()/2 - 50; x+= 20){
+            			drawArrow(g, x, y, x + Ex , y -  Ey);
+            		}
+            		for (int x = t.getWidth()/2; x < t.getWidth() - 50; x += 20){
+            			drawArrow(g, x, y, x + Bx, y -  By);
+            		}
+            }
+        		
+        	}
+        });
+    }
+}
